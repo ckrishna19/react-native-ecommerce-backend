@@ -6,7 +6,7 @@ const orderSchema = new mongoose.Schema(
     orderBy: { type: String },
     orderItems: [],
     paid: { type: Boolean, default: false },
-    subtotal: Number,
+    total: Number,
     shippingCost: Number,
   },
   { timestamps: true }
