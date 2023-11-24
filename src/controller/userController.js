@@ -2,6 +2,8 @@ const User = require("../model/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const salt = 12;
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
 const userCtrl = {
   register: async (req, res) => {
     const { email, password } = req.body;
@@ -46,6 +48,41 @@ const userCtrl = {
       return res.status(500).json({
         message: "Internal Server Error",
       });
+    }
+  },
+
+  uploadProfileImage: async (req, res) => {
+    try {
+      const { image } = req.files;
+
+      const user = await User.findById(req.user);
+
+      if (user?.image) {
+        await cloudinary.uploader.destroy(user.image.publicId);
+      }
+
+      const result = await cloudinary.uploader.upload(image.tempFilePath, {
+        folder: "rn-ecommerce-profile",
+      });
+
+      const updateProfileImage = await User.findByIdAndUpdate(
+        req.user,
+        {
+          "image.url": result.url,
+          "image.publicId": result.public_id,
+        },
+        { new: true }
+      );
+
+      fs.unlink(image.tempFilePath, (err) => {
+        if (err) throw err;
+      });
+
+      return res
+        .status(201)
+        .json({ message: "updated successfully", updateProfileImage });
+    } catch (error) {
+      return res.status(500).json({ message: "internal server error" });
     }
   },
 };
