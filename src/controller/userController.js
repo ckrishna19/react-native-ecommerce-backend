@@ -57,8 +57,8 @@ const userCtrl = {
 
       const user = await User.findById(req.user);
 
-      if (user?.image) {
-        await cloudinary.uploader.destroy(user.image.publicId);
+      if (user.image?.publicId !== undefined) {
+        await cloudinary.uploader.destroy(user.image?.publicId);
       }
 
       const result = await cloudinary.uploader.upload(image.tempFilePath, {
@@ -82,6 +82,7 @@ const userCtrl = {
         .status(201)
         .json({ message: "updated successfully", updateProfileImage });
     } catch (error) {
+      console.log(error);
       return res.status(500).json({ message: "internal server error" });
     }
   },
