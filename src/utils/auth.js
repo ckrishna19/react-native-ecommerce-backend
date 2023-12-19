@@ -11,7 +11,7 @@ const auth = (req, res, next) => {
       if (err)
         return res.status(403).json({ message: "Invalid authorization" });
       req.user = result.id;
-
+      
       next();
     }
   );
