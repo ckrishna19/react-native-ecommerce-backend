@@ -18,8 +18,9 @@ const orderCtrl = {
         .status(201)
         .json({ clientSecret: paymentIntent.client_secret });
     } catch (error) {
-      console.log(error);
-      return res.status(500).json({ message: "internal server error" });
+      return res
+        .status(500)
+        .json({ message: error?.code ? error?.code : "internal server error" });
     }
   },
   createOrder: async (req, res) => {

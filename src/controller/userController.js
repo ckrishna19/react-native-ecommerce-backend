@@ -244,7 +244,7 @@ const userCtrl = {
 
       const updated = await User.findByIdAndUpdate(
         req.user,
-        { auth: { OTP: OTP, Date: Date.now() } },
+        { verify: { OTP: OTP, Date: Date.now() } },
         { new: true }
       );
 
@@ -254,24 +254,25 @@ const userCtrl = {
     }
   },
   verifyProfile: async (req, res) => {
-    const { otp } = req.body;
+    const { OTP: otp } = req.body;
 
     try {
-      const user = await User.findOne({ "auth.OTP": otp });
+      const user = await User.findOne({ "verify.OTP": otp });
+
       if (!user)
         return res
           .status(403)
-          .json({ message: "No user found please check it " });
+          .json({ message: "No user found please check it... " });
 
       if (
-        user.auth?.Date !== null &&
-        user.auth?.Date + 1000 * 60 * 5 <= Date.now()
+        user.verify?.Date !== null &&
+        user.verify?.Date + 1000 * 60 * 5 <= Date.now()
       ) {
         return res.status(403).json({ message: "Token expired..." });
       }
       const updated = await User.findByIdAndUpdate(
         user._id,
-        { auth: { OTP: null, Date: null }, verified: true },
+        { verify: { OTP: null, Date: null }, verified: true },
         { new: true }
       );
 

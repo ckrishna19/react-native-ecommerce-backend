@@ -11,7 +11,9 @@ const userSchema = new mongoose.Schema(
       publicId: { type: String },
     },
     phone: { type: String },
-    auth: { OTP: Number, Date: Number },
+    auth: { OTP: String, Date: Number },
+
+    verify: { OTP: String, Date: Number },
 
     address: {
       district: { type: String },
