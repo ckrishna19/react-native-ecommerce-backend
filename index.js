@@ -5,6 +5,7 @@ const cloudinary = require("cloudinary").v2;
 const mongoose = require("mongoose");
 const orderRouter = require("./src/router/orderRouter");
 const userRouter = require("./src/router/userRouter");
+const taskRouter = require("./src/router/taskRouter");
 const auth = require("./src/utils/auth");
 
 require("dotenv").config();
@@ -19,13 +20,14 @@ cloudinary.config({
 });
 // "mongodb://127.0.0.1:27017/stripe"
 
+//process.env.MONGO_URI
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("database connected"))
   .catch(() => console.log("Error on connectiong database"));
 
 app.use("/order", auth, orderRouter);
-
+app.use("/tasks", taskRouter);
 app.use("/user", userRouter);
 
 app.use((err, req, res, next) => {
