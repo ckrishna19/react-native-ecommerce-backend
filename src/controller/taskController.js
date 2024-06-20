@@ -4,8 +4,8 @@ const taskModel = require("../model/taskModel");
 const taskCtrl = {
   createTask: async (req, res) => {
     try {
-      const { title, completed, description } = req.body;
-      if (!title || !description || !completed)
+      const { title, description } = req.body;
+      if (!title || !description)
         return res.status(403).json({ message: "All fields are compolsory" });
 
       const newTask = await taskModel.create(req.body);
